@@ -17,32 +17,40 @@ namespace GpsSoapWCF
     public class GetGPS : System.Web.Services.WebService
     {
         [WebMethod]
-        public GPSData GetVehicleGPS(string Vin)
+        public List<VinLocation> GetVehicleGPS(List<string> Vins)
         {
-            List<string> vinList = new List<string>()
-            {
-                "VEH01234567891011", "VEH01234567891012", "VEH01234567891013"
-            };
-
             Random random = new Random();
             GPSData gpsData = new GPSData();
-            if (vinList.Contains(Vin))
-            {   
-                gpsData.latitude = 42 + random.NextDouble();
-                gpsData.longitude = -83 - random.NextDouble();
 
-                return gpsData;
-            }
-            else
+            var vinLocationList = new List<VinLocation>();
+            foreach (var vin in Vins)
             {
-                return gpsData;
+                var vinLocation = new VinLocation()
+                {
+                    Vin = vin,
+                    GPS = new GPSData()
+                    {
+                        Latitude = 42 + random.NextDouble(),
+                        Longitude = -83 - random.NextDouble()
+                    }
+                };
+
+                vinLocationList.Add(vinLocation);
             }
+
+            return vinLocationList;
         }
     }
 
     public class GPSData
     {
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+    }
+
+    public class VinLocation
+    {
+        public string Vin { get; set; }
+        public GPSData GPS { get; set; }
     }
 }
